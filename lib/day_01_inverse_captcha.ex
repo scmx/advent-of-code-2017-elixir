@@ -21,4 +21,23 @@ defmodule Adventofcode.Day01InverseCaptcha do
   defp copy_first_digit_to_end(digits), do: digits <> String.first(digits)
 
   defp add_one(results, digit), do: Map.update(results, digit, 1, &(&1 + 1))
+
+  def halfway_sum(input) do
+    input
+    |> String.graphemes()
+    |> Enum.map(&String.to_integer/1)
+    |> do_halfway_sum()
+  end
+
+  defp do_halfway_sum(digits) do
+    digit_cycle = Stream.cycle(digits)
+    halfway = digits |> length |> div(2)
+
+    Enum.reduce(Enum.with_index(digits), 0, fn {digit, index}, acc ->
+      case Enum.at(digit_cycle, index + halfway) do
+        ^digit -> acc + digit
+        _ -> acc
+      end
+    end)
+  end
 end
