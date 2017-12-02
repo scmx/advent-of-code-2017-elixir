@@ -25,4 +25,18 @@ defmodule Adventofcode.Day02CorruptionChecksum do
   defp difference(numbers) do
     List.first(numbers) - List.last(numbers)
   end
+
+  def division_checksum(input) do
+    input
+    |> parse
+    |> Enum.map(&divide_evenly_divisible_values/1)
+    |> Enum.sum()
+  end
+
+  defp divide_evenly_divisible_values([head | tail]) do
+    case Enum.find(tail, &(rem(head, &1) == 0)) do
+      nil -> divide_evenly_divisible_values(tail)
+      val -> div(head, val)
+    end
+  end
 end

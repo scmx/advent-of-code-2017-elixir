@@ -23,4 +23,24 @@ defmodule Adventofcode.Day02CorruptionChecksumTest do
       end)
     end
   end
+
+  describe "division_checksum/1" do
+    # In the first row, the only two numbers that evenly divide are 8 and 2; the result of this division is 4.
+    # In the second row, the two numbers are 9 and 3; the result is 3.
+    # In the third row, the result is 2.
+    @input """
+    5 9 2 8
+    9 4 7 3
+    3 8 6 5
+    """
+    test "the sum of the results would be 4 + 3 + 2 = 9" do
+      assert 9 = @input |> division_checksum()
+    end
+
+    test "with puzzle input" do
+      with_puzzle_input("input/day_02_corruption_checksum.txt", fn input ->
+        assert 312 = input |> division_checksum()
+      end)
+    end
+  end
 end
