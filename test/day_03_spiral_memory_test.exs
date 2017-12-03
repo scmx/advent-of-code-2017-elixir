@@ -65,4 +65,33 @@ defmodule Adventofcode.Day03SpiralMemoryTest do
       end
     end
   end
+
+  describe "first_bigger_value/1" do
+    # 147  142  133  122   59
+    # 304    5    4    2   57
+    # 330   10    1    1   54
+    # 351   11   23   25   26
+    # 362  747  806--->   ...
+
+    @values """
+    1 2 4 5 10 11 23 25 26 54 57 59 122 133 142 147 304 330 351 362 747 806
+    """
+    test "gives the expected number series on iteration" do
+      stream = Stream.iterate(1, &first_bigger_value/1)
+
+      expected_values =
+        ~r/\d+/
+        |> Regex.scan(@values)
+        |> List.flatten()
+        |> Enum.map(&String.to_integer/1)
+
+      assert Enum.take(stream, 22) == expected_values
+    end
+
+    test "with puzzle input" do
+      with_puzzle_input("input/day_03_spiral_memory.txt", fn input ->
+        assert 330_785 = input |> first_bigger_value()
+      end)
+    end
+  end
 end
