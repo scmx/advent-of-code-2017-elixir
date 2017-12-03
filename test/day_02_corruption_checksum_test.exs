@@ -1,8 +1,7 @@
 defmodule Adventofcode.Day02CorruptionChecksumTest do
-  use ExUnit.Case
+  use Adventofcode.FancyCase
 
   import Adventofcode.Day02CorruptionChecksum
-  import Adventofcode.TestHelpers
 
   describe "checksum/1" do
     # The first row's largest and smallest values are 9 and 1, and their difference is 8.

@@ -1,8 +1,7 @@
 defmodule Adventofcode.Day01InverseCaptchaTest do
-  use ExUnit.Case
+  use Adventofcode.FancyCase
 
   import Adventofcode.Day01InverseCaptcha
-  import Adventofcode.TestHelpers
 
   describe "matching_sum/1" do
     test "1122 produces a sum of 3 (1 + 2) because the first digit (1) matches the second digit and the third digit (2) matches the fourth digit" do

@@ -1,8 +1,7 @@
 defmodule Adventofcode.Day03SpiralMemoryTest do
-  use ExUnit.Case
+  use Adventofcode.FancyCase
 
   import Adventofcode.Day03SpiralMemory
-  import Adventofcode.TestHelpers
 
   describe "steps_to_access_port/1" do
     # 17 16 15 14 13
