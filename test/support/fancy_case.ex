@@ -25,4 +25,18 @@ defmodule Adventofcode.FancyCase do
       {:error, _} -> nil
     end
   end
+
+  @doc """
+  Custom sigil that scans for and returns a list of found integers.
+
+      iex> import Adventofcode.FancyCase
+      ...> ~i"32 5 10"
+      [32, 5, 10]
+  """
+  def sigil_i(data, []) do
+    ~r/\d+/
+    |> Regex.scan(data)
+    |> List.flatten()
+    |> Enum.map(&String.to_integer/1)
+  end
 end
