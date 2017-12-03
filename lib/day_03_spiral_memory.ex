@@ -78,7 +78,6 @@ defmodule Adventofcode.Day03SpiralMemory do
     |> Enum.sum()
   end
 
-  # %{coordinate: coordinate, direction: direction}) do
   defp next_coordinate_and_direction(state) do
     case state.direction do
       :east -> {next_coordinate(state), :north}
