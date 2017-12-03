@@ -40,16 +40,13 @@ defmodule Adventofcode.Day03SpiralMemoryTest do
     # 41 20  7  8  9 10 27
     # 42 21 22 23 24 25 26
     # 43 44 45 46 47 48 49 50
-    @distances """
+    @expected_distances ~i"""
     0 1 2 1 2 1 2 1 2 3 2 3 4 3 2 3 4 3 2 3 4 3 2 3 4 5 4 3 4 5 6 5 4 3 4 5 6 5
     4 3 4 5 6 5 4 3 4 5 6 7
     """
     test "1..50 gives no unexpected results" do
-      distances =
-        ~r/\d+/ |> Regex.scan(@distances) |> List.flatten() |> Enum.map(&String.to_integer/1)
-
       cases =
-        Enum.map(Enum.with_index(distances), fn {expected, index} ->
+        Enum.map(Enum.with_index(@expected_distances), fn {expected, index} ->
           input = index + 1
           actual = steps_to_access_port(input)
           result = if actual == expected, do: :ok, else: :fail
@@ -72,19 +69,13 @@ defmodule Adventofcode.Day03SpiralMemoryTest do
     # 351   11   23   25   26
     # 362  747  806--->   ...
 
-    @values """
+    @expected_values ~i"""
     1 2 4 5 10 11 23 25 26 54 57 59 122 133 142 147 304 330 351 362 747 806
     """
     test "gives the expected number series on iteration" do
       stream = Stream.iterate(1, &first_bigger_value/1)
 
-      expected_values =
-        ~r/\d+/
-        |> Regex.scan(@values)
-        |> List.flatten()
-        |> Enum.map(&String.to_integer/1)
-
-      assert Enum.take(stream, 22) == expected_values
+      assert Enum.take(stream, 22) == @expected_values
     end
 
     test "with puzzle input" do
