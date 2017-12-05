@@ -7,6 +7,14 @@ defmodule Adventofcode.Day05TwistyTrampolines do
     end)
   end
 
+  def how_many_strange_steps(input) do
+    Enum.reduce_while(Stream.iterate(input, &iterate_stranger/1), nil, fn
+      current, _previous when is_number(current) -> {:halt, current}
+      current, _previous when is_binary(current) -> {:cont, current}
+      current, _previous when is_tuple(current) -> {:cont, current}
+    end)
+  end
+
   @doc false
   def iterate(input) when is_binary(input) do
     values =
@@ -27,6 +35,30 @@ defmodule Adventofcode.Day05TwistyTrampolines do
     value = elem(values, index)
     new_index = index + value
     new_values = put_elem(values, index, value + 1)
+    {new_index, iterations + 1, new_values}
+  end
+
+  @doc false
+  def iterate_stranger(input) when is_binary(input) do
+    values =
+      ~r/-?\d+/
+      |> Regex.scan(input)
+      |> List.flatten()
+      |> Enum.map(&String.to_integer/1)
+      |> List.to_tuple()
+
+    iterate({0, 0, values})
+  end
+
+  def iterate_stranger({index, iterations, values})
+      when index < 0 or index >= tuple_size(values),
+      do: iterations
+
+  def iterate_stranger({index, iterations, values}) do
+    value = elem(values, index)
+    new_index = index + value
+    offset = if value >= 3, do: -1, else: 1
+    new_values = put_elem(values, index, value + offset)
     {new_index, iterations + 1, new_values}
   end
 
