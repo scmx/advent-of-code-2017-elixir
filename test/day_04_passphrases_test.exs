@@ -46,7 +46,7 @@ defmodule Adventofcode.Day04PassphrasesTest do
 
     test "with puzzle input" do
       with_puzzle_input("input/day_04_passphrases.txt", fn input ->
-        assert 451 = input |> valid_count_anagram()
+        assert 223 = input |> valid_count_anagram()
       end)
     end
   end
