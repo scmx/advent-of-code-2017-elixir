@@ -15,6 +15,18 @@ defmodule Adventofcode.Day06MemoryReallocationTest do
     end
   end
 
+  describe "cycles_until_same/1" do
+    test "0, 2, 7, and 0" do
+      assert 4 = "0 2 7 0" |> cycles_until_same()
+    end
+
+    test "with puzzle input" do
+      with_puzzle_input("input/day_06_memory_reallocation.txt", fn input ->
+        assert 1610 = input |> cycles_until_same()
+      end)
+    end
+  end
+
   describe "redistribute/1" do
     @expected_redistributions [
       # The banks start with 0, 2, 7, and 0 blocks. The third bank has the most blocks, so it is chosen for redistribution.

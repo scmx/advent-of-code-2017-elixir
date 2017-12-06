@@ -1,10 +1,16 @@
 defmodule Adventofcode.Day06MemoryReallocation do
-  defstruct banks: [], history: %{}, cycles: 0, done: false
+  defstruct banks: [], history: %{}, cycles: 0, match: nil
 
   def cycles_in_total_until_same(input) do
     initial_state = new(input)
     state = redistribute_recursively(initial_state)
     state.cycles
+  end
+
+  def cycles_until_same(input) do
+    initial_state = new(input)
+    state = redistribute_recursively(initial_state)
+    state.cycles - state.match
   end
 
   def new(input) do
@@ -13,7 +19,7 @@ defmodule Adventofcode.Day06MemoryReallocation do
 
   def redistribute_recursively(state) do
     case redistribute(state) do
-      %{done: false} = state -> redistribute_recursively(state)
+      %{match: nil} = state -> redistribute_recursively(state)
       state -> state
     end
   end
@@ -21,10 +27,10 @@ defmodule Adventofcode.Day06MemoryReallocation do
   def redistribute(state) do
     banks = spread_out(state.banks)
     cycles = state.cycles + 1
-    done = Map.has_key?(state.history, banks)
+    match = Map.get(state.history, banks)
     history = Map.put(state.history, banks, cycles)
 
-    %{state | banks: banks, cycles: cycles, history: history, done: done}
+    %{state | banks: banks, cycles: cycles, history: history, match: match}
   end
 
   def spread_out(banks) do
