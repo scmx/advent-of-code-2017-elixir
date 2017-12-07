@@ -1,5 +1,5 @@
 defmodule Adventofcode.Day07RecursiveCircus do
-  defstruct name: nil, weight: nil, children: [], parent: nil
+  defstruct name: nil, weight: nil, children: [], parent: nil, total_weight: 0
 
   def bottom_program(input) do
     input
@@ -7,6 +7,14 @@ defmodule Adventofcode.Day07RecursiveCircus do
     |> start_programs()
     |> connect_programs()
     |> find_bottom_and_stop_programs()
+  end
+
+  def unbalanced_weight(input) do
+    input
+    |> parse()
+    |> start_programs()
+    |> connect_programs()
+    |> find_unbalanced_weight_and_stop_programs()
   end
 
   defp start_programs(programs) do
@@ -58,6 +66,45 @@ defmodule Adventofcode.Day07RecursiveCircus do
     program = find_bottom(pid)
     Enum.each(programs, &Agent.stop/1)
     program.name
+  end
+
+  defp find_unbalanced_weight_and_stop_programs([pid | _] = programs) do
+    bottom_program = find_bottom(pid)
+    weight = find_unbalanced_program(bottom_program)
+    Enum.each(programs, &Agent.stop/1)
+    weight
+  end
+
+  defp find_unbalanced_program(program, expected_weight \\ nil) do
+    case grouped_weights(program.children) do
+      [{_unbalanced_weight, [child]}, {expected_weight, _}] ->
+        find_unbalanced_program(child, expected_weight)
+
+      [{_balanced_weight, _children}] ->
+        expected_weight - program.total_weight + program.weight
+    end
+  end
+
+  def grouped_weights([]), do: nil
+
+  def grouped_weights(children) do
+    children
+    |> Map.values()
+    |> Enum.map(&Agent.get(&1, fn p -> p end))
+    |> Enum.map(&%{&1 | total_weight: get_total_weight(&1)})
+    |> Enum.group_by(& &1.total_weight)
+    |> Enum.sort_by(fn {_, programs} -> length(programs) end)
+  end
+
+  def get_total_weight(program) do
+    children_weight =
+      program.children
+      |> Map.values()
+      |> Enum.map(&Agent.get(&1, fn p -> p end))
+      |> Enum.map(&get_total_weight/1)
+      |> Enum.sum()
+
+    program.weight + children_weight
   end
 
   defp find_bottom(pid) do
