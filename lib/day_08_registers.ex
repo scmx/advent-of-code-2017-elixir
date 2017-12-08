@@ -3,8 +3,16 @@ defmodule Adventofcode.Day08Registers do
     input
     |> parse()
     |> process()
+    |> elem(0)
     |> Map.values()
     |> Enum.max()
+  end
+
+  def highest_value_held(input) do
+    input
+    |> parse()
+    |> process()
+    |> elem(1)
   end
 
   def parse(input) do
@@ -71,20 +79,22 @@ defmodule Adventofcode.Day08Registers do
     {{reg, op, String.to_integer(val)}, {reg2, con, String.to_integer(val2)}}
   end
 
-  defp process(instructions, registers \\ %{})
+  defp process(instructions, result \\ {%{}, 0})
 
-  defp process([], registers), do: registers
+  defp process([], {registers, max}), do: {registers, max}
 
-  defp process([instruction | tail], registers) do
-    result = process_instruction(instruction, registers)
-    process(tail, result)
+  defp process([instruction | tail], {registers, max}) do
+    {result, max} = process_instruction(instruction, {registers, max})
+    process(tail, {result, max})
   end
 
-  def process_instruction({operation, condition}, registers) do
+  def process_instruction({operation, condition}, {registers, max}) do
     if condition(registers, condition) do
-      operation(registers, operation)
+      registers = operation(registers, operation)
+      values = Map.values(registers)
+      {registers, Enum.max([max | values])}
     else
-      registers
+      {registers, max}
     end
   end
 end
