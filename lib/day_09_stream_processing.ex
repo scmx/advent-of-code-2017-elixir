@@ -1,46 +1,40 @@
 defmodule Adventofcode.Day09StreamProcessing do
-  def total_score(input) do
-    input
-    |> process
-    |> elem(0)
+  defstruct level: 0, score: 0, garbage: false, garbage_score: 0
+
+  def total_score(input), do: process(input).score
+
+  def garbage_score(input), do: process(input).garbage_score
+
+  def process(input, state \\ %__MODULE__{})
+
+  def process("", state), do: state
+
+  def process("{" <> input, %{garbage: false} = state) do
+    process(input, %{state | level: state.level + 1})
   end
 
-  def garbage_score(input) do
-    input
-    |> process
-    |> elem(1)
+  def process("}" <> input, %{garbage: false} = s) do
+    process(input, %{s | level: s.level - 1, score: s.score + s.level})
   end
 
-  def process(input, level \\ 0, score \\ 0, garbage \\ false, garbage_score \\ 0)
-
-  def process("", _, score, _, garbage_score), do: {score, garbage_score}
-
-  def process("{" <> input, level, score, false, garbage_score) do
-    process(input, level + 1, score, false, garbage_score)
+  def process("<" <> input, %{garbage: false} = state) do
+    process(input, %{state | garbage: true})
   end
 
-  def process("}" <> input, level, score, false, garbage_score) do
-    process(input, level - 1, score + level, false, garbage_score)
+  def process("," <> input, %{garbage: false} = state) do
+    process(input, state)
   end
 
-  def process("<" <> input, level, score, false, garbage_score) do
-    process(input, level, score, true, garbage_score)
+  def process("!" <> input, %{garbage: true} = state) do
+    process(skip(input), state)
   end
 
-  def process("," <> input, level, score, false, garbage_score) do
-    process(input, level, score, false, garbage_score)
+  def process(">" <> input, %{garbage: true} = state) do
+    process(input, %{state | garbage: false})
   end
 
-  def process("!" <> input, level, score, true, garbage_score) do
-    process(skip(input), level, score, true, garbage_score)
-  end
-
-  def process(">" <> input, level, score, true, garbage_score) do
-    process(input, level, score, false, garbage_score)
-  end
-
-  def process(input, level, score, true, garbage_score) do
-    process(skip(input), level, score, true, garbage_score + 1)
+  def process(input, %{garbage: true} = state) do
+    process(skip(input), %{state | garbage_score: state.garbage_score + 1})
   end
 
   defp skip(input), do: String.slice(input, 1..-1)
