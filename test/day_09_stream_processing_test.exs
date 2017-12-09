@@ -42,4 +42,40 @@ defmodule Adventofcode.Day09StreamProcessingTest do
       end)
     end
   end
+
+  describe "garbage_score/1" do
+    test "<>, 0 characters" do
+      assert 0 = "<>" |> garbage_score()
+    end
+
+    test "<random characters>, 17 characters" do
+      assert 17 = "<random characters>" |> garbage_score()
+    end
+
+    test "<<<<>, 3 characters" do
+      assert 3 = "<<<<>" |> garbage_score()
+    end
+
+    test "<{!>}>, 2 characters" do
+      assert 2 = "<{!>}>" |> garbage_score()
+    end
+
+    test "<!!>, 0 characters" do
+      assert 0 = "<!!>" |> garbage_score()
+    end
+
+    test "<!!!>>, 0 characters" do
+      assert 0 = "<!!!>>" |> garbage_score()
+    end
+
+    test ~s(<{o"i!a,<{i<a>, 10 characters) do
+      assert 10 = ~s(<{o"i!a,<{i<a>) |> garbage_score()
+    end
+
+    test "with puzzle input" do
+      with_puzzle_input("input/day_09_stream_processing.txt", fn input ->
+        assert 6817 = input |> garbage_score()
+      end)
+    end
+  end
 end
