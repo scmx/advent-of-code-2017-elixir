@@ -46,4 +46,28 @@ defmodule Adventofcode.Day10KnotHashTest do
       end)
     end
   end
+
+  describe "knot_hash/1" do
+    test "the empty string becomes a2582a3a0e66e6e86e3812dcb672a272" do
+      assert "a2582a3a0e66e6e86e3812dcb672a272" = "" |> knot_hash
+    end
+
+    test "AoC 2017 becomes 33efeb34ea91902bb2f59c9920caa6cd" do
+      assert "33efeb34ea91902bb2f59c9920caa6cd" = "AoC 2017" |> knot_hash
+    end
+
+    test "1,2,3 becomes 3efbe78a8d82f29979031a4aa0b16a9d" do
+      assert "3efbe78a8d82f29979031a4aa0b16a9d" = "1,2,3" |> knot_hash
+    end
+
+    test "1,2,4 becomes 63960835bcdc130f0b66d7ff4f6a5a8e" do
+      assert "63960835bcdc130f0b66d7ff4f6a5a8e" = "1,2,4" |> knot_hash
+    end
+
+    test "with puzzle input" do
+      with_puzzle_input("input/day_10_knot_hash.txt", fn input ->
+        assert "44f4befb0f303c0bafd085f97741d51d" = input |> knot_hash()
+      end)
+    end
+  end
 end
