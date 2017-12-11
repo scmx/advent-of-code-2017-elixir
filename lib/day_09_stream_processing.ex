@@ -25,17 +25,15 @@ defmodule Adventofcode.Day09StreamProcessing do
     process(input, state)
   end
 
-  def process("!" <> input, %{garbage: true} = state) do
-    process(skip(input), state)
+  def process("!" <> <<_::binary-size(1)>> <> input, %{garbage: true} = state) do
+    process(input, state)
   end
 
   def process(">" <> input, %{garbage: true} = state) do
     process(input, %{state | garbage: false})
   end
 
-  def process(input, %{garbage: true} = state) do
-    process(skip(input), %{state | garbage_score: state.garbage_score + 1})
+  def process(<<_::binary-size(1)>> <> input, %{garbage: true} = state) do
+    process(input, %{state | garbage_score: state.garbage_score + 1})
   end
-
-  defp skip(input), do: String.slice(input, 1..-1)
 end
