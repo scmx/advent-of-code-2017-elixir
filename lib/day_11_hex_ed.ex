@@ -1,11 +1,18 @@
 defmodule Adventofcode.Day11HexEd do
-  defstruct x: 0, y: 0, z: 0, directions: []
+  defstruct x: 0, y: 0, z: 0, directions: [], max_distance: 0
 
   def steps_away(input) do
     input
     |> parse
     |> process_recursively
     |> distance_from
+  end
+
+  def furthest_away(input) do
+    input
+    |> parse
+    |> process_recursively
+    |> Map.get(:max_distance)
   end
 
   def process_recursively(%{directions: []} = state), do: state
@@ -18,7 +25,12 @@ defmodule Adventofcode.Day11HexEd do
 
   def process(%{directions: [direction | tail], x: x, y: y, z: z} = state) do
     {x2, y2, z2} = travel(direction, {x, y, z})
-    %{state | x: x2, y: y2, z: z2, directions: tail}
+    next_state = %{state | x: x2, y: y2, z: z2}
+
+    distance = distance_from(next_state)
+    max_distance = Enum.max([state.max_distance, distance])
+
+    %{next_state | directions: tail, max_distance: max_distance}
   end
 
   def travel(:north, {x, y, z}), do: {x, y + 1, z - 1}
