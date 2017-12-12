@@ -44,4 +44,49 @@ defmodule Adventofcode.Day12DigitalPlumberTest do
       assert [0, 2, 3, 4, 5, 6] = @input |> parse() |> which_programs()
     end
   end
+
+  describe "how_many_groups/1" do
+    @input """
+    0 <-> 2
+    1 <-> 1
+    2 <-> 0, 3, 4
+    3 <-> 2, 4
+    4 <-> 2, 3, 6
+    5 <-> 6
+    6 <-> 4, 5
+    """
+    test "2 groups one consisting of programs 0,2,3,4,5,6 and the other only 1" do
+      assert 2 = @input |> how_many_groups()
+    end
+
+    test "with puzzle input" do
+      with_puzzle_input("input/day_12_digital_plumber.txt", fn input ->
+        assert 207 = input |> how_many_groups()
+      end)
+    end
+  end
+
+  describe "which_groups/1" do
+    # Program 0 by definition.
+    # Program 2, directly connected to program 0.
+    # Program 3 via program 2.
+    # Program 4 via program 2.
+    # Program 5 via programs 6, then 4, then 2.
+    # Program 6 via programs 4, then 2.
+    @input """
+    0 <-> 2
+    1 <-> 1
+    2 <-> 0, 3, 4
+    3 <-> 2, 4
+    4 <-> 2, 3, 6
+    5 <-> 6
+    6 <-> 4, 5
+    """
+    test "2 groups: one consisting of programs 0,2,3,4,5,6 and the other only 1" do
+      assert %{
+               0 => [0, 2, 3, 4, 5, 6],
+               1 => [1]
+             } = @input |> parse() |> which_groups()
+    end
+  end
 end

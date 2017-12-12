@@ -6,9 +6,28 @@ defmodule Adventofcode.Day12DigitalPlumber do
     |> length()
   end
 
-  def which_programs(programs) do
+  def how_many_groups(input) do
+    input
+    |> parse()
+    |> which_groups()
+    |> Map.keys()
+    |> length()
+  end
+
+  def which_groups(programs, initial \\ 0, groups \\ %{}) do
+    groups = Map.put(groups, initial, which_programs(programs, initial))
+    all = programs |> Map.keys()
+    collected = groups |> Map.values() |> List.flatten() |> Enum.uniq()
+
+    case all -- collected do
+      [] -> groups
+      [initial | _tail] -> which_groups(programs, initial, groups)
+    end
+  end
+
+  def which_programs(programs, initial \\ 0) do
     programs
-    |> do_travel([0], MapSet.new([0]))
+    |> do_travel([initial], MapSet.new([initial]))
     |> Enum.to_list()
   end
 
