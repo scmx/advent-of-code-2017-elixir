@@ -2,7 +2,7 @@ defmodule Adventofcode.Day13PacketScanners do
   alias Scanner
 
   @enforce_keys [:scanners, :max_depth]
-  defstruct scanners: nil, max_depth: nil, depth: -1, caught_at_depth: []
+  defstruct scanners: nil, max_depth: nil, depth: -1, caught_at_depth: [], delay: 0
 
   def severity(input) do
     input
@@ -12,11 +12,27 @@ defmodule Adventofcode.Day13PacketScanners do
     |> do_severity()
   end
 
+  def minimum_delay(input) do
+    input
+    |> parse()
+    |> new()
+    |> do_minimum_delay()
+  end
+
   defp do_severity(%{caught_at_depth: caught_at_depth, scanners: scanners}) do
     scanners
     |> Enum.filter(&(&1.depth in caught_at_depth))
     |> Enum.map(&(&1.depth * &1.range))
     |> Enum.sum()
+  end
+
+  defp do_minimum_delay(state) do
+    Enum.find_value(Stream.iterate(0, &(&1 + 1)), fn delay ->
+      case %{state | delay: delay} |> tick_until_caught_or_done() do
+        %{caught_at_depth: []} -> delay
+        %{caught_at_depth: [_depth]} -> nil
+      end
+    end)
   end
 
   defp tick_repeatedly(%{depth: max_depth, max_depth: max_depth} = state), do: state
@@ -27,10 +43,28 @@ defmodule Adventofcode.Day13PacketScanners do
     |> tick_repeatedly()
   end
 
-  defp tick(state) do
+  defp tick_until_caught_or_done(%{caught_at_depth: [_ | _]} = state), do: state
+
+  defp tick_until_caught_or_done(%{depth: max_depth, max_depth: max_depth} = state) do
+    state
+  end
+
+  defp tick_until_caught_or_done(state) do
+    state
+    |> tick()
+    |> tick_until_caught_or_done()
+  end
+
+  defp tick(%{delay: 0} = state) do
     state
     |> tick_player()
     |> tick_scanners()
+  end
+
+  defp tick(%{delay: delay} = state) do
+    %{state | delay: 0}
+    |> fastforward_scanners(delay)
+    |> tick()
   end
 
   defmodule Scanner do
@@ -63,6 +97,22 @@ defmodule Adventofcode.Day13PacketScanners do
       end
 
     %{scanner | position: pos + direction, direction: direction}
+  end
+
+  defp fastforward_scanners(%{scanners: scanners} = state, delay) do
+    %{state | scanners: Enum.map(scanners, &fastforward_scanner(&1, delay))}
+  end
+
+  defp fastforward_scanner(scanner, delay) do
+    distance = scanner.range - 1
+
+    case rem(scanner.position + delay, distance * 2) do
+      pos when pos > distance ->
+        %{scanner | direction: -1, position: trunc(abs(distance * 2 - pos))}
+
+      pos ->
+        %{scanner | direction: 1, position: pos}
+    end
   end
 
   defp new(scanners) do
