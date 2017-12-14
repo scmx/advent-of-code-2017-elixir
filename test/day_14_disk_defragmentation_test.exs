@@ -14,4 +14,16 @@ defmodule Adventofcode.Day14DiskDefragmentationTest do
       end)
     end
   end
+
+  describe "regions_count/1" do
+    test "flqrgnkx across the entire 128x128 grid there are 1242 groups" do
+      assert 1242 = "flqrgnkx" |> regions_count()
+    end
+
+    test "with puzzle input" do
+      with_puzzle_input("input/day_14_disk_defragmentation.txt", fn input ->
+        assert 1113 = input |> regions_count()
+      end)
+    end
+  end
 end
