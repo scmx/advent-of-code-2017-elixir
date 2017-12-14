@@ -10,10 +10,15 @@ defmodule Adventofcode.Day14DiskDefragmentation do
 
   def regions_count(input) do
     input
+    |> regions()
+    |> length()
+  end
+
+  def regions(input) do
+    input
     |> squares()
     |> free_squares_to_coordinates()
     |> group_coordinates()
-    |> length()
   end
 
   defp squares(input) do
@@ -84,5 +89,23 @@ defmodule Adventofcode.Day14DiskDefragmentation do
     |> String.graphemes()
     |> Enum.filter(&(&1 == "1"))
     |> Enum.count()
+  end
+
+  def pretty_print(regions) do
+    coordinates =
+      regions
+      |> Enum.with_index()
+      |> Enum.reduce(%{}, fn {coordinates, index}, acc ->
+           Enum.reduce(coordinates, acc, &Map.put(&2, &1, index))
+         end)
+
+    Enum.map_join(0..127, "\n", fn y ->
+      Enum.map_join(0..127, "", fn x ->
+        case coordinates[{x, y}] do
+          nil -> "  "
+          group -> Integer.to_string(group, 36)
+        end
+      end)
+    end)
   end
 end

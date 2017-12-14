@@ -17,6 +17,8 @@ defmodule Adventofcode.Day14DiskDefragmentationTest do
 
   describe "regions_count/1" do
     test "flqrgnkx across the entire 128x128 grid there are 1242 groups" do
+      # IO.puts ""
+      # IO.puts(pretty_print(regions("flqrgnkx")))
       assert 1242 = "flqrgnkx" |> regions_count()
     end
 
