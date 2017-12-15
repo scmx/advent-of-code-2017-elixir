@@ -1,4 +1,6 @@
 defmodule Adventofcode.Day15DuelingGenerators do
+  use Bitwise
+
   def final_count(input) when is_binary(input), do: final_count(parse(input))
 
   def final_count({a, b}) do
@@ -45,27 +47,8 @@ defmodule Adventofcode.Day15DuelingGenerators do
     rem(val * multiplier, 2_147_483_647)
   end
 
+  @mask (1 <<< 16) - 1
   defp lowest_bits_of_binary_pairs_same?({a, b}) do
-    {a, b}
-    |> binary_pairs()
-    |> lowest_bits_same()
-  end
-
-  defp binary_pairs({a, b}) do
-    {binary(a), binary(b)}
-  end
-
-  defp binary(val) do
-    val
-    |> Integer.to_string(2)
-    |> String.pad_leading(32, "0")
-  end
-
-  defp lowest_bits_same({a, b}) do
-    lowest_bits(a) == lowest_bits(b)
-  end
-
-  def lowest_bits(val) do
-    String.slice(val, -16..-1)
+    (a &&& @mask) ^^^ (b &&& @mask) == 0
   end
 end
