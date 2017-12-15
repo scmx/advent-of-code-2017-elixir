@@ -9,9 +9,9 @@ defmodule Adventofcode.Day15DuelingGeneratorsTest do
     end
 
     test "with puzzle input" do
-      # with_puzzle_input("input/day_15_dueling_generators.txt", fn input ->
-      assert 619 = {591, 393} |> final_count()
-      # end)
+      with_puzzle_input("input/day_15_dueling_generators.txt", fn input ->
+        assert 619 = input |> final_count()
+      end)
     end
   end
 
@@ -21,9 +21,9 @@ defmodule Adventofcode.Day15DuelingGeneratorsTest do
     end
 
     test "with puzzle input" do
-      # with_puzzle_input("input/day_15_dueling_generators.txt", fn input ->
-      assert 290 = {591, 393} |> final_count_2()
-      # end)
+      with_puzzle_input("input/day_15_dueling_generators.txt", fn input ->
+        assert 290 = input |> final_count_2()
+      end)
     end
   end
 end
