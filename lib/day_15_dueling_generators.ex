@@ -3,6 +3,17 @@ defmodule Adventofcode.Day15DuelingGenerators do
     do_final_count(40_000_000, [generator(a, 16807), generator(b, 48271)])
   end
 
+  def final_count_2({a, b}) do
+    do_final_count(5_000_000, [
+      generator(a, 16807, divisible(4)),
+      generator(b, 48271, divisible(8))
+    ])
+  end
+
+  defp divisible(amount) do
+    &Stream.filter(&1, fn val -> rem(val, amount) == 0 end)
+  end
+
   defp do_final_count(limit, [gen_a, gen_b]) do
     [gen_a, gen_b]
     |> Stream.zip()
@@ -10,10 +21,11 @@ defmodule Adventofcode.Day15DuelingGenerators do
     |> Enum.count(&lowest_bits_of_binary_pairs_same?/1)
   end
 
-  defp generator(initial, multiplier) do
+  defp generator(initial, multiplier, filter \\ & &1) do
     initial
     |> iterate(multiplier)
     |> Stream.iterate(&iterate(&1, multiplier))
+    |> filter.()
   end
 
   defp iterate(val, multiplier) do
