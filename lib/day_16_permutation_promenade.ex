@@ -1,8 +1,14 @@
 defmodule Adventofcode.Day16PermutationPromenade do
-  def what_order(input, dancers_size) do
+  def what_order(input, dancers_size, dance_count \\ 1) do
     dancers = ?a..?z |> Enum.take(dancers_size) |> to_string
     instructions = parse(input)
-    dance(dancers, instructions)
+
+    # Every 60th dancing state is the same
+    dance_count = rem(dance_count, 60)
+
+    Enum.reduce(1..dance_count, dancers, fn _, dancers ->
+      dance(dancers, instructions)
+    end)
   end
 
   def parse(input) do

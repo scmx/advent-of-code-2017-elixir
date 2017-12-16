@@ -15,6 +15,22 @@ defmodule Adventofcode.Day16PermutationPromenadeTest do
     end
   end
 
+  describe "what_order/3" do
+    test "stands as expected after dancing 2 times" do
+      assert "ceadb" = "s1,x3/4,pe/b" |> what_order(5, 2)
+    end
+
+    test "stands as expected after dancing 10_000_000 times" do
+      assert "abcde" = "s1,x3/4,pe/b" |> what_order(5, 10_000_000)
+    end
+
+    test "with puzzle input" do
+      with_puzzle_input("input/day_16_permutation_promenade.txt", fn input ->
+        assert "ibmchklnofjpdeag" = input |> what_order(16, 1_000_000_000)
+      end)
+    end
+  end
+
   describe "dance/2" do
     @expected [
       "eabcd",
