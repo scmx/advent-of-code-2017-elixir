@@ -96,8 +96,8 @@ defmodule Adventofcode.Day14DiskDefragmentation do
       regions
       |> Enum.with_index()
       |> Enum.reduce(%{}, fn {coordinates, index}, acc ->
-           Enum.reduce(coordinates, acc, &Map.put(&2, &1, index))
-         end)
+        Enum.reduce(coordinates, acc, &Map.put(&2, &1, index))
+      end)
 
     Enum.map_join(0..127, "\n", fn y ->
       Enum.map_join(0..127, "", fn x ->
