@@ -4,13 +4,29 @@ defmodule Adventofcode.Day17SpinlockTest do
   import Adventofcode.Day17Spinlock
 
   describe "value_after_last/1" do
+    @tag :skip
     test "step 3 times per insert gives 638 after the last written value" do
       assert 638 = "3" |> value_after_last()
     end
 
+    @tag :skip
     test "with puzzle input" do
       with_puzzle_input("input/day_17_spinlock.txt", fn input ->
         assert 1337 = input |> value_after_last()
+      end)
+    end
+  end
+
+  describe "value_after_zero/1" do
+    @tag :skip
+    test "step 3 times per insert gives 638 after the last written value" do
+      assert 638 = "3" |> value_after_zero()
+    end
+
+    @tag :skip
+    test "with puzzle input" do
+      with_puzzle_input("input/day_17_spinlock.txt", fn input ->
+        assert 1337 = input |> value_after_zero()
       end)
     end
   end

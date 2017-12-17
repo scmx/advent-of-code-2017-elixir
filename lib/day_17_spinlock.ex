@@ -7,6 +7,13 @@ defmodule Adventofcode.Day17Spinlock do
     Enum.at(state.circular_buffer, state.current_index)
   end
 
+  def value_after_zero(input, iterations \\ 50_000_000) do
+    state = input |> new(iterations) |> step_until_last()
+    index = Enum.find_index(state.circular_buffer, &(&1 == 0))
+    state = forward(%{state | current_index: index}, 1)
+    Enum.at(state.circular_buffer, state.current_index)
+  end
+
   def new(input, last) when is_binary(input) do
     new(String.to_integer(input), last)
   end
@@ -24,6 +31,10 @@ defmodule Adventofcode.Day17Spinlock do
   end
 
   def step(state) do
+    if rem(state.next, 10_000) == 0 do
+      IO.inspect(Map.split(state, [:circular_buffer]) |> elem(1))
+    end
+
     state
     |> forward(state.steps)
     |> insert_next()
