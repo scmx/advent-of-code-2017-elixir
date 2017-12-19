@@ -19,9 +19,16 @@ defmodule Adventofcode.FancyCase do
 
   Runs the given function with the contents of the file if it exists.
   """
-  def with_puzzle_input(path, fun) do
+  def with_puzzle_input(path, options \\ [], fun) do
+    trim =
+      if Keyword.get(options, :trim) == false do
+        &String.trim_trailing(&1, "\n")
+      else
+        &String.trim/1
+      end
+
     case path |> File.read() do
-      {:ok, data} -> fun.(data |> String.trim())
+      {:ok, data} -> data |> trim.() |> fun.()
       {:error, _} -> nil
     end
   end
