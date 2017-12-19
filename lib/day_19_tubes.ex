@@ -3,6 +3,7 @@ defmodule Adventofcode.Day19Tubes do
             width: 0,
             height: 0,
             seen: [],
+            steps: 0,
             position: {0, 0},
             direction: {0, 1}
 
@@ -11,6 +12,13 @@ defmodule Adventofcode.Day19Tubes do
     |> new()
     |> travel()
     |> seen_letters()
+  end
+
+  def how_many_steps(input) do
+    input
+    |> new()
+    |> travel()
+    |> Map.get(:steps)
   end
 
   defp new(input) do
@@ -53,7 +61,7 @@ defmodule Adventofcode.Day19Tubes do
   end
 
   defp forward(state) do
-    %{state | position: next_pos(state.position, state.direction)}
+    %{state | position: next_pos(state.position, state.direction), steps: state.steps + 1}
   end
 
   defp next_pos({x, y}, {dir_x, dir_y}) do
