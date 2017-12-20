@@ -46,7 +46,7 @@ defmodule Adventofcode.Day11HexEdTest do
 
     test "with puzzle input" do
       with_puzzle_input("input/day_11_hex_ed.txt", fn input ->
-        assert 1337 = input |> furthest_away()
+        assert 1457 = input |> furthest_away()
       end)
     end
   end
