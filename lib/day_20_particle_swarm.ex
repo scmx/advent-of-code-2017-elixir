@@ -8,6 +8,15 @@ defmodule Adventofcode.Day20ParticleSwarm do
     |> closest_particle()
   end
 
+  def particles_left_count(input) do
+    particles = parse(input)
+
+    1..1_000
+    |> Enum.reduce(particles, fn _, acc -> tick_without_collisions(acc) end)
+    |> Enum.map(&manhattan_distance/1)
+    |> Enum.count()
+  end
+
   defp parse(input) do
     input
     |> String.split("\n", trim: true)
@@ -36,6 +45,10 @@ defmodule Adventofcode.Day20ParticleSwarm do
     particles |> Enum.map(&tick_particle/1)
   end
 
+  defp tick_without_collisions(particles) do
+    particles |> Enum.map(&tick_particle/1) |> remove_collisions()
+  end
+
   defp tick_particle(%{p: {px, py, pz}, v: {vx, vy, vz}, a: {ax, ay, az}}) do
     vx = vx + ax
     vy = vy + ay
@@ -53,5 +66,12 @@ defmodule Adventofcode.Day20ParticleSwarm do
     |> Enum.sort_by(fn {distance, _} -> distance end)
     |> hd()
     |> elem(1)
+  end
+
+  defp remove_collisions(particles) do
+    particles
+    |> Enum.group_by(& &1.p)
+    |> Enum.filter(fn {_, particles} -> length(particles) == 1 end)
+    |> Enum.map(&hd(elem(&1, 1)))
   end
 end
