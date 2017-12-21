@@ -88,7 +88,6 @@ defmodule Adventofcode.Day19Tubes do
       position = next_pos(state.position, direction)
 
       case state.grid[position] do
-
         " " ->
           false
 
