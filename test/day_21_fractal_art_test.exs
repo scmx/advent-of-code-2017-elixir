@@ -17,5 +17,11 @@ defmodule Adventofcode.Day21FractalArtTest do
         assert 176 = input |> pixels_left_on_count(5)
       end)
     end
+
+    test "with puzzle input and 18 iterations" do
+      with_puzzle_input("input/day_21_fractal_art.txt", fn input ->
+        assert 2_368_161 = input |> pixels_left_on_count(18)
+      end)
+    end
   end
 end
