@@ -40,6 +40,7 @@ defmodule Adventofcode.Day22SporificaVirus do
     |> turn_left_or_right()
     |> toggle_infected()
     |> forward()
+    |> print_and_sleep(options)
     |> burst_repeatedly(options)
   end
 
@@ -89,6 +90,16 @@ defmodule Adventofcode.Day22SporificaVirus do
 
         MapSet.put(acc, {x, y})
     end)
+  end
+
+  defp print_and_sleep(state, options) do
+    if Keyword.get(options, :print), do: print_pretty_grid(state)
+    if sleep = Keyword.get(options, :sleep), do: :timer.sleep(sleep)
+    state
+  end
+
+  def print_pretty_grid(state) do
+    IO.puts(IO.ANSI.reset() <> IO.ANSI.home() <> IO.ANSI.clear() <> pretty_grid(state))
   end
 
   def pretty_grid(%{position: position} = state, range \\ -20..20) do
