@@ -90,4 +90,21 @@ defmodule Adventofcode.Day22SporificaVirus do
         MapSet.put(acc, {x, y})
     end)
   end
+
+  def pretty_grid(%{position: position} = state, range \\ -20..20) do
+    print_cell = fn {x, y} ->
+      if position_infected?(state, {x, y}), do: "#", else: "."
+    end
+
+    Enum.map_join(range, "\n", fn y ->
+      Enum.map_join(range, "", fn x ->
+        cond do
+          Enum.min(range) == x -> ""
+          position == {x, y} -> "["
+          position == {x - 1, y} -> "]"
+          true -> " "
+        end <> print_cell.({x, y})
+      end)
+    end) <> "\n"
+  end
 end
