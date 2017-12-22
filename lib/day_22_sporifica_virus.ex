@@ -1,4 +1,6 @@
 defmodule Adventofcode.Day22SporificaVirus do
+  use Adventofcode
+
   @enforce_keys [:grid, :width, :height, :burst]
   defstruct grid: MapSet.new(),
             width: 0,
