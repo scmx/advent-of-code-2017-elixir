@@ -60,7 +60,7 @@ defmodule Adventofcode.Day10KnotHash do
 
   def process(%{lengths: [head | tail]} = state) do
     values = reverse(state, state.current, head)
-    current = rem(state.current + head + state.skip, tuple_size(state.values))
+    current = rem(state.current + head + state.skip, state.size)
     skip = state.skip + 1
     %{state | current: current, skip: skip, lengths: tail, values: values}
   end
