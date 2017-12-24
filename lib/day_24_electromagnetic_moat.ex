@@ -7,6 +7,15 @@ defmodule Adventofcode.Day24ElectromagneticMoat do
     |> Enum.max()
   end
 
+  def longest_bridge(input) do
+    input
+    |> parse()
+    |> build_bridges()
+    |> longest_bridges()
+    |> Enum.map(&sum_bridge/1)
+    |> Enum.max()
+  end
+
   defp parse(input) do
     ~r/(\d+)\/(\d+)/
     |> Regex.scan(input)
@@ -51,5 +60,15 @@ defmodule Adventofcode.Day24ElectromagneticMoat do
     components
     |> Enum.flat_map(&Tuple.to_list/1)
     |> Enum.sum()
+  end
+
+  defp longest_bridges([first_bridge | bridges]) do
+    Enum.reduce(bridges, [first_bridge], fn bridge, acc ->
+      case {length(bridge), length(hd(acc))} do
+        {a, b} when a > b -> [bridge]
+        {a, b} when a == b -> [bridge | acc]
+        _ -> acc
+      end
+    end)
   end
 end
